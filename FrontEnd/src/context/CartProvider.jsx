@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
-const CartContext = createContext();
+import CartContext from "./CartContext";
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(() => {
@@ -31,6 +31,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const updateQuantity = (id, qty) => {
+    if (qty < 1) return;
     setCartItems((prev) =>
       prev.map((item) => (item._id === id ? { ...item, quantity: qty } : item)),
     );
@@ -44,4 +45,4 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-export const useCart = () => useContext(CartContext);
+// export const useCart = () => useContext(CartContext);

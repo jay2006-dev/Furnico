@@ -1,8 +1,4 @@
-import axios from "axios";
-
-const API = axios.create({
-  baseURL: "/api/v1",
-});
+import API from "../services/app";
 
 export const getProducts = async () => {
   const response = await API.get("/products");
