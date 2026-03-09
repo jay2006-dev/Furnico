@@ -1,12 +1,15 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { getProductById } from "../services/productService";
+import { useContext } from "react";
+import CartContext from "../context/CartContext";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -37,6 +40,7 @@ const ProductDetails = () => {
       <h2>${product.price}</h2>
       <p>{product.description}</p>
       <p>Stock : {product.stock}</p>
+      <button onClick={() => addToCart(product)}>Add to Cart</button>
     </div>
   );
 };

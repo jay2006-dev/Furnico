@@ -16,11 +16,13 @@ export const AuthProvider = ({ children }) => {
     }
   }, [userInfo]);
 
-  const login = (data) => {
-    setUserInfo(data);
+  const login = (userData) => {
+    setUserInfo(userData);
+    localStorage.setItem("userInfo", JSON.stringify(userData));
   };
 
   const logout = () => {
+    localStorage.removeItem("userInfo");
     setUserInfo(null);
   };
 

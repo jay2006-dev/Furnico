@@ -1,18 +1,30 @@
 import { useState, useContext } from "react";
-import { loginUser } from "../services/authService";
+import { loginUser, registerUser } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
   const { login } = useContext(AuthContext);
+  const [isRegister, setIsRegister] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const data = await loginUser({ email, password });
+      let data;
+      if (isRegister) {
+        data = await registerUser(formData);
+      } else {
+        data = await loginUser(formData);
+      }
       login(data);
       navigate("/");
     } catch (err) {
@@ -22,22 +34,43 @@ const Login = () => {
   };
   return (
     <div>
+      <h2>{isRegister ? "Register" : "Login"}</h2>
+
       <form onSubmit={submitHandler}>
-        <h2>Login</h2>
+        {isRegister && (
+          <input
+            type="text"
+            placeholder="Name"
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          ></input>
+        )}
         <input
           type="email"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         />
         <input
           type="password"
           placeholder="Paswword"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={formData.password}
+          onChange={(e) =>
+            setFormData({ ...formData, password: e.target.value })
+          }
         />
-        <button type="submit">Login</button>
+        <button type="submit">{isRegister ? "Register" : "Login"}</button>
       </form>
+      <p>
+        {isRegister ? "Already have an account?" : "Don't have an account?"}
+        <button
+          onClick={() => {
+            setIsRegister(!isRegister);
+            setFormData({ name: "", email: "", password: "" });
+          }}
+        >
+          {isRegister ? "Login" : "Register"}
+        </button>
+      </p>
     </div>
   );
 };
