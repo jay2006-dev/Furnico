@@ -4,9 +4,10 @@ const asyncHandler = require("../middleware/asyncHandler");
 const Product = require("../models/Product");
 
 const createOrder = asyncHandler(async (req, res) => {
+  console.log("ORDER BODY:", req.body);
   const { orderItems, shippingAddress, totalPrice } = req.body;
   if (!orderItems || orderItems.length === 0) {
-    return res.status(200).json({ message: "No Order Items" });
+    return res.status(400).json({ message: "No Order Items" });
   }
 
   //Validate Product IDs
@@ -68,6 +69,24 @@ const getAllOrders = asyncHandler(async (req, res) => {
   }
 });
 
+const getOrdersById = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id)
+    .populate("user", "name email")
+    .populate("orderItems.product", "name price");
+
+  if (!order) {
+    return res.status(404).json({ message: "Order Not Found" });
+  }
+
+  // 🔐 Authorization check
+  if (order.user.toString() !== req.user._id.toString()) {
+    res.status(403);
+    throw new Error("Not authorized");
+  }
+
+  res.json(order);
+});
+
 const updateOrderStatus = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
@@ -81,4 +100,10 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   res.json(order);
 });
 
-module.exports = { createOrder, getMyOrders, getAllOrders, updateOrderStatus };
+module.exports = {
+  createOrder,
+  getMyOrders,
+  getAllOrders,
+  getOrdersById,
+  updateOrderStatus,
+};
