@@ -14,6 +14,7 @@ const Navbar = () => {
       <Link to="/">Home</Link>
       <Link to="/products">Products</Link>
       <Link to="/cart"> Cart ({totalItems})</Link>
+      <Link to="/my-orders">My Orders</Link>
       {userInfo ? (
         <>
           <span>Welcome {userInfo.name}</span>
