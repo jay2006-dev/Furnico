@@ -18,10 +18,10 @@ const getProducts = asyncHandler(async (req, res) => {
     }
 
     if (search) {
-      filter.name = { $regex: search, $options: i };
+      filter.name = { $regex: search, $options: "i" };
     }
 
-    const products = await Product.find(filter).populate(category);
+    const products = await Product.find(filter).populate("category");
     res.status(200).json(products);
   } catch (err) {
     res.status(400).json({ message: "Products Not Fetched" });
