@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (userInfo) {
-      localStorage.setItem("useInfo", JSON.stringify(userInfo));
+      localStorage.setItem("userInfo", JSON.stringify(userInfo));
     } else {
       localStorage.removeItem("userInfo");
     }

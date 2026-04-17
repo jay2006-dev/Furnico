@@ -11,13 +11,6 @@ export const getMyOrders = async () => {
 };
 
 export const getOrdersById = async (id) => {
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${userInfo.token}`,
-    },
-  };
-  const res = await API.get(`/orders/${id}`, config);
+  const res = await API.get(`/orders/${id}`);
   return res.data;
 };

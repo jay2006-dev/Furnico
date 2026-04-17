@@ -1,11 +1,11 @@
 import { useState, useContext } from "react";
 import { loginUser, registerUser } from "../services/authService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import Button from "../components/ui/Button";
+import { motion } from "framer-motion";
 
 const Login = () => {
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
   const { login } = useContext(AuthContext);
   const [isRegister, setIsRegister] = useState(false);
   const [formData, setFormData] = useState({
@@ -13,11 +13,13 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setError("");
     try {
       let data;
       if (isRegister) {
@@ -28,49 +30,108 @@ const Login = () => {
       login(data);
       navigate("/");
     } catch (err) {
-      alert("Invalid Credentials");
-      console.log(err);
+      setError(err.response?.data?.message || "Invalid Credentials");
     }
   };
-  return (
-    <div>
-      <h2>{isRegister ? "Register" : "Login"}</h2>
 
-      <form onSubmit={submitHandler}>
-        {isRegister && (
-          <input
-            type="text"
-            placeholder="Name"
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          ></input>
-        )}
-        <input
-          type="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+  return (
+    <div className="min-h-screen flex">
+      {/* Left Image Section */}
+      <div className="hidden lg:block lg:w-1/2 relative">
+        <img 
+          src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+          alt="Luxury Interior" 
+          className="absolute inset-0 w-full h-full object-cover"
         />
-        <input
-          type="password"
-          placeholder="Paswword"
-          value={formData.password}
-          onChange={(e) =>
-            setFormData({ ...formData, password: e.target.value })
-          }
-        />
-        <button type="submit">{isRegister ? "Register" : "Login"}</button>
-      </form>
-      <p>
-        {isRegister ? "Already have an account?" : "Don't have an account?"}
-        <button
-          onClick={() => {
-            setIsRegister(!isRegister);
-            setFormData({ name: "", email: "", password: "" });
-          }}
+        <div className="absolute inset-0 bg-black/20" />
+        <Link to="/" className="absolute top-10 left-12 font-serif text-3xl text-white tracking-widest z-10">
+          FURNICO
+        </Link>
+      </div>
+
+      {/* Right Form Section */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center bg-luxury-white px-6 py-20">
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          className="w-full max-w-md"
         >
-          {isRegister ? "Login" : "Register"}
-        </button>
-      </p>
+          <div className="mb-12">
+            <h2 className="font-serif text-4xl text-luxury-black mb-4">
+              {isRegister ? "Create Account" : "Welcome Back"}
+            </h2>
+            <p className="font-sans font-light text-luxury-gray">
+              {isRegister 
+                ? "Join our exclusive community of luxury furniture enthusiasts." 
+                : "Sign in to access your orders and saved collections."}
+            </p>
+          </div>
+
+          {error && (
+            <div className="mb-6 p-4 border border-red-200 bg-red-50 text-red-600 text-sm font-sans">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={submitHandler} className="flex flex-col gap-6">
+            {isRegister && (
+              <div className="flex flex-col gap-2">
+                <label className="font-sans text-xs uppercase tracking-widest text-neutral-500">Full Name</label>
+                <input
+                  type="text"
+                  required
+                  className="border-b border-neutral-300 bg-transparent py-2 px-1 font-sans text-luxury-black focus:outline-none focus:border-luxury-black transition-colors"
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                />
+              </div>
+            )}
+            
+            <div className="flex flex-col gap-2">
+              <label className="font-sans text-xs uppercase tracking-widest text-neutral-500">Email Address</label>
+              <input
+                type="email"
+                required
+                value={formData.email}
+                className="border-b border-neutral-300 bg-transparent py-2 px-1 font-sans text-luxury-black focus:outline-none focus:border-luxury-black transition-colors"
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="font-sans text-xs uppercase tracking-widest text-neutral-500">Password</label>
+              <input
+                type="password"
+                required
+                value={formData.password}
+                className="border-b border-neutral-300 bg-transparent py-2 px-1 font-sans text-luxury-black focus:outline-none focus:border-luxury-black transition-colors"
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              />
+            </div>
+
+            <Button type="submit" variant="primary" className="mt-4 w-full">
+              {isRegister ? "Register" : "Sign In"}
+            </Button>
+          </form>
+
+          <div className="mt-8 pt-8 border-t border-neutral-200 text-center">
+            <p className="font-sans text-sm text-neutral-500">
+              {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
+              <button
+                type="button"
+                className="text-luxury-black font-medium hover:underline underline-offset-4 ml-2 transition-all"
+                onClick={() => {
+                  setIsRegister(!isRegister);
+                  setFormData({ name: "", email: "", password: "" });
+                  setError("");
+                }}
+              >
+                {isRegister ? "Sign In" : "Create Account"}
+              </button>
+            </p>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 };
