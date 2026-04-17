@@ -8,6 +8,8 @@ import { motion } from "framer-motion";
 const Checkout = () => {
   const { cartItems, clearCart } = useContext(CartContext);
   const navigate = useNavigate();
+  const [orderError, setOrderError] = useState("");
+  const [placing, setPlacing] = useState(false);
   
   const [address, setAddress] = useState({
     street: "",
@@ -23,6 +25,8 @@ const Checkout = () => {
 
   const placeOrder = async (e) => {
     e.preventDefault();
+    setOrderError("");
+    setPlacing(true);
     const orderData = {
       orderItems: cartItems.map((item) => ({
         product: item._id,
@@ -44,8 +48,9 @@ const Checkout = () => {
       clearCart();
       navigate(`/order/${order._id}`);
     } catch (error) {
-      console.error("Order creation failed", error);
-      alert("Failed to place order. Please try again.");
+      setOrderError(error.response?.data?.message || "Something went wrong. Please try again.");
+    } finally {
+      setPlacing(false);
     }
   };
 
@@ -109,8 +114,11 @@ const Checkout = () => {
               </div>
             </div>
             
-            <Button type="submit" variant="primary" className="w-full md:w-auto self-start mt-4">
-              Confirm & Place Order
+            {orderError && (
+              <p className="text-red-600 font-sans text-sm border border-red-200 bg-red-50 p-4">{orderError}</p>
+            )}
+            <Button type="submit" variant="primary" className="w-full md:w-auto self-start mt-4" disabled={placing}>
+              {placing ? "Placing Order..." : "Confirm & Place Order"}
             </Button>
           </form>
         </motion.div>

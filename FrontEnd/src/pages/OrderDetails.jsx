@@ -8,14 +8,20 @@ const OrderDetails = () => {
   const { id } = useParams();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchOrder = async () => {
       try {
         const data = await getOrdersById(id);
-        setOrder(data);
+        if (data && data.message && !data._id) {
+          // API returned an error object
+          setError(data.message);
+        } else {
+          setOrder(data);
+        }
       } catch (err) {
-        console.log(err);
+        setError(err.response?.data?.message || "Something went wrong. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -31,7 +37,14 @@ const OrderDetails = () => {
     );
   }
 
-  if (!order) return <div className="min-h-screen flex items-center justify-center bg-luxury-white"><p className="font-serif text-2xl">Order Not Found</p></div>;
+  if (error || !order) return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-luxury-white gap-6">
+      <p className="font-serif text-2xl text-luxury-black">{error || "Order Not Found"}</p>
+      <Link to="/my-orders">
+        <Button variant="secondary">Back to My Orders</Button>
+      </Link>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-luxury-white pt-32 pb-24 px-6 md:px-12">

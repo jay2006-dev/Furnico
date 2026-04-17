@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { loginUser, registerUser } from "../services/authService";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import Button from "../components/ui/Button";
 import { motion } from "framer-motion";
@@ -16,6 +16,9 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
+  // If the user was redirected from another page, go back there after login
+  const redirectTo = location.state?.from || "/";
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -28,7 +31,7 @@ const Login = () => {
         data = await loginUser(formData);
       }
       login(data);
-      navigate("/");
+      navigate(redirectTo, { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || "Invalid Credentials");
     }
