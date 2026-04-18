@@ -36,9 +36,8 @@ const Navbar = () => {
         {!isLoginPage && (
           <div className="hidden md:flex gap-8 text-xs font-medium uppercase tracking-widest">
             <Link to="/products" className="hover:text-neutral-500 transition-colors duration-300">Collections</Link>
-            {userInfo && (
-              <Link to="/my-orders" className="hover:text-neutral-500 transition-colors duration-300">Orders</Link>
-            )}
+            <Link to="/our-story" className="hover:text-neutral-500 transition-colors duration-300">Our Story</Link>
+            <Link to="/my-orders" className="hover:text-neutral-500 transition-colors duration-300">Orders</Link>
           </div>
         )}
 

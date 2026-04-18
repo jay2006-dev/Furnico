@@ -47,9 +47,6 @@ const Login = () => {
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/20" />
-        <Link to="/" className="absolute top-10 left-12 font-serif text-3xl text-white tracking-widest z-10">
-          FURNICO
-        </Link>
       </div>
 
       {/* Right Form Section */}

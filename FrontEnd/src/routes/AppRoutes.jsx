@@ -11,6 +11,7 @@ import OrderSuccess from "../pages/OrderSuccess";
 import MyOrders from "../pages/MyOrders";
 import OrderDetails from "../pages/OrderDetails";
 import Profile from "../pages/Profile";
+import OurStory from "../pages/OurStory";
 import PrivateRoute from "../components/PrivateRoute";
 
 const AppRoutes = () => {
@@ -28,6 +29,7 @@ const AppRoutes = () => {
           <Route path="/order/:id" element={<PrivateRoute><OrderSuccess /></PrivateRoute>} />
           <Route path="/my-orders" element={<PrivateRoute><MyOrders /></PrivateRoute>} />
           <Route path="/orders/:id" element={<PrivateRoute><OrderDetails /></PrivateRoute>} />
+          <Route path="/our-story" element={<OurStory />} />
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         </Routes>
       </main>
