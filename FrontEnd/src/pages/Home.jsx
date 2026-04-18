@@ -1,6 +1,5 @@
 import React from 'react';
 import LuxuryHero from '../components/home/LuxuryHero';
-import ProductCarousel from '../components/home/ProductCarousel';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Button from '../components/ui/Button';
@@ -9,9 +8,6 @@ const Home = () => {
   return (
     <div className="bg-luxury-white min-h-screen">
       <LuxuryHero />
-
-      {/* Product Carousel */}
-      <ProductCarousel />
 
       {/* Editorial Section */}
       <section className="py-32 px-6 md:px-12 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16">
