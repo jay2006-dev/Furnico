@@ -24,6 +24,11 @@ const ProductCard = ({ product, index }) => {
       </Link>
       
       <div className="flex flex-col gap-1 px-1">
+        {product.category && (
+          <p className="font-sans text-[10px] uppercase tracking-widest text-luxury-gray">
+            {product.category?.name || product.category}
+          </p>
+        )}
         <Link to={`/products/${product._id}`}>
           <h3 className="font-sans text-sm font-medium tracking-wide text-luxury-black group-hover:text-neutral-500 transition-colors duration-300 line-clamp-1">
             {product.name}
