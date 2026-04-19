@@ -48,7 +48,7 @@ const LuxuryHero = () => {
           transition={{ duration: 1, delay: 0.6 }}
         >
           <Link to="/products">
-            <Button variant="primary" className="bg-white text-luxury-black hover:bg-neutral-200">
+            <Button variant="primary" className="bg-luxury-black text-white hover:bg-luxury-black">
               Explore Collection
             </Button>
           </Link>
