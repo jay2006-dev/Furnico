@@ -5,6 +5,7 @@ const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const connectDB = require("./config/db");
 const orderRoutes = require("./routes/orderRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 const { errorHandler, notFound } = require("./middleware/errorMiddleware");
 
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/orders", orderRoutes);
+app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/categories", require("./routes/categoryRoutes"));
 app.use(notFound);
 app.use(errorHandler);

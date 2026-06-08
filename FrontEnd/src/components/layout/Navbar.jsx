@@ -2,7 +2,7 @@ import useCart from "../../hooks/useCart";
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Link, useLocation } from "react-router-dom";
-import { motion, useScroll } from "framer-motion";
+import {  useScroll } from "framer-motion";
 import { FiShoppingBag, FiUser, FiLogOut } from "react-icons/fi";
 
 const Navbar = () => {
@@ -13,14 +13,20 @@ const Navbar = () => {
 
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
-
-  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const isAdminPage = location.pathname === "/admin-dashboard";
 
   useEffect(() => {
-    return scrollY.onChange((latest) => {
+    const unsubscribe = scrollY.on("change", (latest) => {
       setIsScrolled(latest > 50);
     });
+    return () => unsubscribe();
   }, [scrollY]);
+
+  if (isAdminPage) {
+    return null; // Hide navbar on admin dashboard
+  }
+
+  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <motion.nav
@@ -55,6 +61,11 @@ const Navbar = () => {
                   <FiUser size={20} className="md:hidden" />
                   <span className="hidden md:block text-xs font-medium uppercase tracking-widest">{userInfo.name}</span>
                 </Link>
+                {userInfo?.role === "admin" && (
+                  <Link to="/admin-dashboard" className="text-xs font-medium uppercase tracking-widest hover:text-neutral-500 transition-colors duration-300 hidden md:block">
+                    Admin
+                  </Link>
+                )}
                 <button onClick={logout} className="hover:text-neutral-500 transition-colors duration-300" title="Logout">
                   <FiLogOut size={20} />
                 </button>

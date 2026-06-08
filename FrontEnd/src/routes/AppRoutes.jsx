@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import ProductList from "../pages/ProductList";
 import Home from "../pages/Home";
 import ProductDetails from "../pages/ProductDetails";
@@ -12,13 +12,17 @@ import MyOrders from "../pages/MyOrders";
 import OrderDetails from "../pages/OrderDetails";
 import Profile from "../pages/Profile";
 import OurStory from "../pages/OurStory";
+import AdminDashboard from "../pages/AdminDashboard";
 import PrivateRoute from "../components/PrivateRoute";
 
 const AppRoutes = () => {
+  const location = useLocation();
+  const isAdminPage = location.pathname === "/admin-dashboard";
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <main className="flex-1">
+      <main className={`flex-1 ${!isAdminPage ? "pt-20" : ""}`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<ProductList />} />
@@ -31,6 +35,7 @@ const AppRoutes = () => {
           <Route path="/orders/:id" element={<PrivateRoute><OrderDetails /></PrivateRoute>} />
           <Route path="/our-story" element={<OurStory />} />
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+          <Route path="/admin-dashboard" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
         </Routes>
       </main>
       <Footer />
