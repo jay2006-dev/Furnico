@@ -14,6 +14,7 @@ import Profile from "../pages/Profile";
 import OurStory from "../pages/OurStory";
 import AdminDashboard from "../pages/AdminDashboard";
 import PrivateRoute from "../components/PrivateRoute";
+import ScrollToTop from "../pages/ScrollToTop";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -23,19 +24,62 @@ const AppRoutes = () => {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <main className={`flex-1 ${!isAdminPage ? "pt-20" : ""}`}>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<ProductList />} />
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/login" element={<Login />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
-          <Route path="/order/:id" element={<PrivateRoute><OrderSuccess /></PrivateRoute>} />
-          <Route path="/my-orders" element={<PrivateRoute><MyOrders /></PrivateRoute>} />
-          <Route path="/orders/:id" element={<PrivateRoute><OrderDetails /></PrivateRoute>} />
+          <Route
+            path="/checkout"
+            element={
+              <PrivateRoute>
+                <Checkout />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/order/:id"
+            element={
+              <PrivateRoute>
+                <OrderSuccess />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/my-orders"
+            element={
+              <PrivateRoute>
+                <MyOrders />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/orders/:id"
+            element={
+              <PrivateRoute>
+                <OrderDetails />
+              </PrivateRoute>
+            }
+          />
           <Route path="/our-story" element={<OurStory />} />
-          <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-          <Route path="/admin-dashboard" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin-dashboard"
+            element={
+              <PrivateRoute>
+                <AdminDashboard />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </main>
       <Footer />

@@ -2,15 +2,24 @@ import { useEffect, useState } from "react";
 import adminService from "../../services/adminService";
 
 const PieChart = ({ data, width = 300, height = 300 }) => {
-  const colors = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899"];
+  const colors = [
+    "#3B82F6",
+    "#10B981",
+    "#F59E0B",
+    "#EF4444",
+    "#8B5CF6",
+    "#EC4899",
+  ];
 
   const totalValue = data.reduce((sum, d) => sum + d.value, 0);
-  
+
   if (totalValue === 0) return null;
-  
+
   const slices = data.map((item, index) => {
     // Calculate starting angle for this slice by summing all previous slice angles
-    const startAngle = data.slice(0, index).reduce((sum, d) => sum + (d.value / totalValue) * 360, 0);
+    const startAngle = data
+      .slice(0, index)
+      .reduce((sum, d) => sum + (d.value / totalValue) * 360, 0);
     const sliceAngle = (item.value / totalValue) * 360;
     const endAngle = startAngle + sliceAngle;
 
@@ -37,11 +46,19 @@ const PieChart = ({ data, width = 300, height = 300 }) => {
     const labelRadius = radius * 0.65;
     const labelX = width / 2 + labelRadius * Math.cos(labelRad);
     const labelY = height / 2 + labelRadius * Math.sin(labelRad);
-    const percentage = ((item.value / data.reduce((sum, d) => sum + d.value, 0)) * 100).toFixed(1);
+    const percentage = (
+      (item.value / data.reduce((sum, d) => sum + d.value, 0)) *
+      100
+    ).toFixed(1);
 
     return (
       <g key={index}>
-        <path d={pathData} fill={colors[index % colors.length]} stroke="white" strokeWidth="2" />
+        <path
+          d={pathData}
+          fill={colors[index % colors.length]}
+          stroke="white"
+          strokeWidth="2"
+        />
         <text
           x={labelX}
           y={labelY}
@@ -78,8 +95,15 @@ const PieChart = ({ data, width = 300, height = 300 }) => {
   );
 };
 
-const BarChart = ({ data, width = 600, height = 350 }) => {
-  const colors = ["#06B6D4", "#3B82F6", "#8B5CF6", "#EC4899", "#F97316", "#EF4444"];
+const BarChart = ({ data, width = 300, height = 300 }) => {
+  const colors = [
+    "#06B6D4",
+    "#3B82F6",
+    "#8B5CF6",
+    "#EC4899",
+    "#F97316",
+    "#EF4444",
+  ];
   const padding = { top: 20, right: 20, bottom: 40, left: 50 };
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
@@ -110,7 +134,12 @@ const BarChart = ({ data, width = 600, height = 350 }) => {
                 stroke="#e5e7eb"
                 strokeWidth="1"
               />
-              <text x={padding.left - 10} y={y + 4} textAnchor="end" className="text-xs fill-gray-600">
+              <text
+                x={padding.left - 10}
+                y={y + 4}
+                textAnchor="end"
+                className="text-xs fill-gray-600"
+              >
                 ${Math.round(maxValue * ratio)}
               </text>
             </g>
@@ -178,7 +207,9 @@ const BarChart = ({ data, width = 600, height = 350 }) => {
               className="text-xs fill-gray-700"
               transform={`rotate(45 ${labelX} ${xAxisY + 20})`}
             >
-              {item.name.length > 10 ? item.name.substring(0, 10) + "..." : item.name}
+              {item.name.length > 10
+                ? item.name.substring(0, 10) + "..."
+                : item.name}
             </text>
           );
         })}
@@ -220,9 +251,11 @@ const EstimationChart = () => {
         // Only count delivered orders
         if (order.status === "Delivered") {
           order.orderItems?.forEach((item) => {
-            const categoryName = item.product?.category?.name || "Uncategorized";
+            const categoryName =
+              item.product?.category?.name || "Uncategorized";
             const itemRevenue = (item.price || 0) * (item.qty || 1);
-            categoryRevenue[categoryName] = (categoryRevenue[categoryName] || 0) + itemRevenue;
+            categoryRevenue[categoryName] =
+              (categoryRevenue[categoryName] || 0) + itemRevenue;
           });
         }
       });
@@ -234,10 +267,12 @@ const EstimationChart = () => {
       }));
 
       // Bar chart data - revenue from delivered orders
-      const barData = Object.entries(categoryRevenue).map(([name, revenue]) => ({
-        name,
-        value: revenue,
-      }));
+      const barData = Object.entries(categoryRevenue).map(
+        ([name, revenue]) => ({
+          name,
+          value: revenue,
+        }),
+      );
 
       setPieChartData(pieData);
       setBarChartData(barData);
@@ -261,9 +296,16 @@ const EstimationChart = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <PieChart data={pieChartData} />
-      <BarChart data={barChartData} />
+    <div className="col-span-full block w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        <div className="w-full">
+          <PieChart data={pieChartData} />
+        </div>
+
+        <div className="w-full">
+          <BarChart data={barChartData} />
+        </div>
+      </div>
     </div>
   );
 };

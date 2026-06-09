@@ -2,7 +2,7 @@ import useCart from "../../hooks/useCart";
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Link, useLocation } from "react-router-dom";
-import {  useScroll } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 import { FiShoppingBag, FiUser, FiLogOut } from "react-icons/fi";
 
 const Navbar = () => {
@@ -41,14 +41,32 @@ const Navbar = () => {
         {/* Left Links - hidden on login page */}
         {!isLoginPage && (
           <div className="hidden md:flex gap-8 text-xs font-medium uppercase tracking-widest">
-            <Link to="/products" className="hover:text-neutral-500 transition-colors duration-300">Collections</Link>
-            <Link to="/our-story" className="hover:text-neutral-500 transition-colors duration-300">Our Story</Link>
-            <Link to="/my-orders" className="hover:text-neutral-500 transition-colors duration-300">Orders</Link>
+            <Link
+              to="/products"
+              className="hover:text-neutral-500 transition-colors duration-300"
+            >
+              Collections
+            </Link>
+            <Link
+              to="/our-story"
+              className="hover:text-neutral-500 transition-colors duration-300"
+            >
+              Our Story
+            </Link>
+            <Link
+              to="/my-orders"
+              className="hover:text-neutral-500 transition-colors duration-300"
+            >
+              Orders
+            </Link>
           </div>
         )}
 
         {/* Center Logo */}
-        <Link to="/" className="absolute left-1/2 -translate-x-1/2 font-serif text-2xl md:text-3xl tracking-widest text-luxury-black">
+        <Link
+          to="/"
+          className="absolute left-1/2 -translate-x-1/2 font-serif text-2xl md:text-3xl tracking-widest text-luxury-black"
+        >
           FURNICO
         </Link>
 
@@ -57,26 +75,44 @@ const Navbar = () => {
           <div className="flex gap-6 items-center text-luxury-black">
             {userInfo ? (
               <div className="flex items-center gap-4">
-                <Link to="/profile" className="flex items-center gap-2 hover:text-neutral-500 transition-colors duration-300">
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-2 hover:text-neutral-500 transition-colors duration-300"
+                >
                   <FiUser size={20} className="md:hidden" />
-                  <span className="hidden md:block text-xs font-medium uppercase tracking-widest">{userInfo.name}</span>
+                  <span className="hidden md:block text-xs font-medium uppercase tracking-widest">
+                    {userInfo.name}
+                  </span>
                 </Link>
                 {userInfo?.role === "admin" && (
-                  <Link to="/admin-dashboard" className="text-xs font-medium uppercase tracking-widest hover:text-neutral-500 transition-colors duration-300 hidden md:block">
+                  <Link
+                    to="/admin-dashboard"
+                    className="text-xs font-medium uppercase tracking-widest hover:text-neutral-500 transition-colors duration-300 hidden md:block"
+                  >
                     Admin
                   </Link>
                 )}
-                <button onClick={logout} className="hover:text-neutral-500 transition-colors duration-300" title="Logout">
+                <button
+                  onClick={logout}
+                  className="hover:text-neutral-500 transition-colors duration-300"
+                  title="Logout"
+                >
                   <FiLogOut size={20} />
                 </button>
               </div>
             ) : (
-              <Link to="/login" className="hover:text-neutral-500 transition-colors duration-300">
+              <Link
+                to="/login"
+                className="hover:text-neutral-500 transition-colors duration-300"
+              >
                 <FiUser size={20} />
               </Link>
             )}
-            
-            <Link to="/cart" className="relative hover:text-neutral-500 transition-colors duration-300">
+
+            <Link
+              to="/cart"
+              className="relative hover:text-neutral-500 transition-colors duration-300"
+            >
               <FiShoppingBag size={20} />
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-luxury-black text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">

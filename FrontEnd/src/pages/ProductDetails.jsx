@@ -1,23 +1,32 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState, useContext } from "react";
-import { getProductById } from "../services/productService";
+import { useEffect, useState, useContext, useMemo } from "react";
+import { getProducts, getProductById } from "../services/productService";
 import CartContext from "../context/CartContext";
 import ImageGallery from "../components/ui/ImageGallery";
 import Button from "../components/ui/Button";
+import ProductCard from "../components/ui/ProductCard";
 import { motion } from "framer-motion";
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const [products, setProducts] = useState([]);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getProductById(id);
-        setProduct(data);
+        setLoading(true);
+
+        const [productsData, productData] = await Promise.all([
+          getProducts(),
+          getProductById(id),
+        ]);
+
+        setProducts(productsData.products || productsData);
+        setProduct(productData);
       } catch (err) {
         setError("Failed to fetch product");
         console.log(err);
@@ -25,8 +34,15 @@ const ProductDetails = () => {
         setLoading(false);
       }
     };
-    fetchProduct();
+
+    fetchData();
   }, [id]);
+
+  const recommendedProducts = useMemo(() => {
+    if (!product) return [];
+
+    return products.filter((p) => p._id !== product._id).slice(0, 4);
+  }, [products, product]);
 
   if (loading) {
     return (
@@ -47,7 +63,6 @@ const ProductDetails = () => {
   return (
     <div className="min-h-screen bg-luxury-white pt-32 pb-24 px-6 md:px-12">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24">
-        
         {/* Left Side: Gallery */}
         <div className="flex-1 lg:w-3/5">
           <ImageGallery images={product.images} />
@@ -55,7 +70,7 @@ const ProductDetails = () => {
 
         {/* Right Side: Details (Sticky) */}
         <div className="flex-1 lg:w-2/5">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -86,8 +101,8 @@ const ProductDetails = () => {
               <p className="font-sans text-sm text-neutral-500 font-light">
                 Availability: {product.stock > 0 ? "In Stock" : "Out of Stock"}
               </p>
-              <Button 
-                variant="primary" 
+              <Button
+                variant="primary"
                 className="w-full py-4 text-sm"
                 onClick={() => addToCart(product)}
                 disabled={product.stock <= 0}
@@ -98,9 +113,21 @@ const ProductDetails = () => {
                 Complimentary white-glove delivery on all orders.
               </p>
             </div>
+            {recommendedProducts.length > 0 && (
+              <div className="max-w-7xl mx-auto mt-24">
+                <h2 className="font-serif text-2xl mb-8 text-luxury-black">
+                  You may also like
+                </h2>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                  {recommendedProducts.map((p) => (
+                    <ProductCard key={p._id} product={p} />
+                  ))}
+                </div>
+              </div>
+            )}
           </motion.div>
         </div>
-        
       </div>
     </div>
   );
