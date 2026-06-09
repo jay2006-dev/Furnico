@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useContext, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { getProducts, getProductById } from "../services/productService";
 import CartContext from "../context/CartContext";
 import ImageGallery from "../components/ui/ImageGallery";
@@ -14,6 +15,7 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { addToCart } = useContext(CartContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,6 +45,14 @@ const ProductDetails = () => {
 
     return products.filter((p) => p._id !== product._id).slice(0, 4);
   }, [products, product]);
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  };
 
   if (loading) {
     return (
@@ -76,6 +86,12 @@ const ProductDetails = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="sticky top-32 flex flex-col gap-8"
           >
+            <button
+              onClick={handleBack}
+              className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-neutral-500 hover:text-luxury-black transition"
+            >
+              <span className="text-sm">←</span> Back
+            </button>
             {/* Header */}
             <div className="flex flex-col gap-4 border-b border-neutral-200 pb-8">
               <h1 className="font-serif text-4xl leading-tight text-luxury-black">
@@ -113,22 +129,25 @@ const ProductDetails = () => {
                 Complimentary white-glove delivery on all orders.
               </p>
             </div>
-            {recommendedProducts.length > 0 && (
-              <div className="max-w-7xl mx-auto mt-24">
-                <h2 className="font-serif text-2xl mb-8 text-luxury-black">
-                  You may also like
-                </h2>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                  {recommendedProducts.map((p) => (
-                    <ProductCard key={p._id} product={p} />
-                  ))}
-                </div>
-              </div>
-            )}
           </motion.div>
         </div>
       </div>
+      {/* Recommended Section (OUTSIDE flex but INSIDE root) */}
+      {recommendedProducts.length > 0 && (
+        <section className="border-t border-neutral-200 mt-24 pt-24 px-6 md:px-12">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="font-serif text-2xl mb-8 text-luxury-black">
+              You may also like
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {recommendedProducts.map((p) => (
+                <ProductCard key={p._id} product={p} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 };

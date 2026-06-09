@@ -7,6 +7,7 @@ import Footer from "../components/layout/Footer";
 import Login from "../pages/Login";
 import Cart from "../pages/Cart";
 import Checkout from "../pages/Checkout";
+import Contact from "../pages/Contact";
 import OrderSuccess from "../pages/OrderSuccess";
 import MyOrders from "../pages/MyOrders";
 import OrderDetails from "../pages/OrderDetails";
@@ -31,6 +32,7 @@ const AppRoutes = () => {
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/login" element={<Login />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/contact" element={<Contact />} />
           <Route
             path="/checkout"
             element={
