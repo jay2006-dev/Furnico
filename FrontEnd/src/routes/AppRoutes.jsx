@@ -16,6 +16,7 @@ import OurStory from "../pages/OurStory";
 import AdminDashboard from "../pages/AdminDashboard";
 import PrivateRoute from "../components/PrivateRoute";
 import ScrollToTop from "../pages/ScrollToTop";
+import NotFound from "../pages/NotFound";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -33,6 +34,7 @@ const AppRoutes = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/*" element={<NotFound />} />
           <Route
             path="/checkout"
             element={
