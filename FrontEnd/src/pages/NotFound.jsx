@@ -41,12 +41,14 @@ const NotFound = () => {
           <Link
             to="/"
             className="px-8 py-3 bg-black text-white uppercase tracking-widest text-sm hover:bg-neutral-800 transition"
+            replace
           >
             Return Home
           </Link>
 
           <Link
             to="/products"
+            replace
             className="px-8 py-3 border border-black text-black uppercase tracking-widest text-sm hover:bg-black hover:text-white transition"
           >
             Browse Collection
