@@ -41,9 +41,8 @@ const OrdersWidget = () => {
   if (loading) return <div className="text-center py-4">Loading...</div>;
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      <h2 className="text-2xl font-bold mb-4">Recent Orders</h2>
-      <div className="overflow-x-auto">
+    <>
+      <div className="overflow-x-auto overflow-y-auto max-h-[500px]">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b">
@@ -62,20 +61,26 @@ const OrdersWidget = () => {
                 <tr key={order._id} className="border-b hover:bg-gray-50">
                   <td className="py-3">{order._id?.slice(-8)}</td>
                   <td className="py-3">{order.user?.name || "N/A"}</td>
-                  <td className="py-3">{order.orderItems?.length || 0} item(s)</td>
-                  <td className="py-3">${order.totalPrice?.toFixed(2) || "0.00"}</td>
+                  <td className="py-3">
+                    {order.orderItems?.length || 0} item(s)
+                  </td>
+                  <td className="py-3">
+                    ${order.totalPrice?.toFixed(2) || "0.00"}
+                  </td>
                   <td className="py-3">
                     <select
                       value={order.status || "Pending"}
-                      onChange={(e) => updateOrderStatus(order._id, e.target.value)}
+                      onChange={(e) =>
+                        updateOrderStatus(order._id, e.target.value)
+                      }
                       className={`px-2 py-1 rounded text-xs font-semibold cursor-pointer ${
                         order.status === "Delivered"
                           ? "bg-green-100 text-green-800"
                           : order.status === "Processing"
-                          ? "bg-blue-100 text-blue-800"
-                          : order.status === "Shipped"
-                          ? "bg-purple-100 text-purple-800"
-                          : "bg-yellow-100 text-yellow-800"
+                            ? "bg-blue-100 text-blue-800"
+                            : order.status === "Shipped"
+                              ? "bg-purple-100 text-purple-800"
+                              : "bg-yellow-100 text-yellow-800"
                       }`}
                     >
                       <option value="Pending">Pending</option>
@@ -84,7 +89,9 @@ const OrdersWidget = () => {
                       <option value="Delivered">Delivered</option>
                     </select>
                   </td>
-                  <td className="py-3">{new Date(order.createdAt).toLocaleDateString()}</td>
+                  <td className="py-3">
+                    {new Date(order.createdAt).toLocaleDateString()}
+                  </td>
                   <td className="py-3">
                     <button
                       onClick={() => handleViewOrder(order)}
@@ -110,7 +117,7 @@ const OrdersWidget = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-    </div>
+    </>
   );
 };
 

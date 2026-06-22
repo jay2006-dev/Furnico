@@ -2,6 +2,7 @@ const Order = require("../models/Order");
 const mongoose = require("mongoose");
 const asyncHandler = require("../middleware/asyncHandler");
 const Product = require("../models/Product");
+const stripe = require("../config/stripe");
 
 const createOrder = asyncHandler(async (req, res) => {
   console.log("ORDER BODY:", req.body);
@@ -33,19 +34,31 @@ const createOrder = asyncHandler(async (req, res) => {
     }
   }
 
-  for (const item of orderItems) {
-    await Product.findByIdAndUpdate(item.product, {
-      $inc: { stock: -item.qty },
-    });
-  }
-
-  const order = await Order.create({
+  const order = new Order({
     user: req.user._id,
     orderItems,
     shippingAddress,
     totalPrice,
   });
-  res.status(201).json(order);
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: Math.round(totalPrice * 100),
+    currency: "inr",
+    metadata: {
+      orderId: order._id.toString(),
+    },
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+
+  order.stripePaymentIntentId = paymentIntent.id;
+  await order.save();
+
+  res.status(201).json({
+    order,
+    clientSecret: paymentIntent.client_secret,
+  });
 });
 
 const getMyOrders = asyncHandler(async (req, res) => {

@@ -2,13 +2,14 @@ const asyncHandler = require("../middleware/asyncHandler");
 const { isAdmin } = require("../middleware/adminMiddleware");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
+const Payment = require("../models/Payment");
 
 // Get dashboard statistics
 const getDashboardStats = asyncHandler(async (req, res) => {
   const totalOrders = await Order.countDocuments();
   const totalProducts = await Product.countDocuments();
   const totalRevenue = await Order.aggregate([
-    { $match: { status: "Delivered" } },
+    { $match: { isPaid: true } },
     { $group: { _id: null, total: { $sum: "$totalPrice" } } },
   ]);
 
@@ -88,7 +89,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   const order = await Order.findByIdAndUpdate(
     id,
     { status },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   ).populate("user", "name email");
 
   if (!order) {
@@ -101,12 +102,14 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
 // Get revenue statistics
 const getRevenueStats = asyncHandler(async (req, res) => {
   const totalRevenue = await Order.aggregate([
-    { $match: { status: "Delivered" } },
+    { $match: { isPaid: true } },
     { $group: { _id: null, total: { $sum: "$totalPrice" } } },
   ]);
 
-  // Count only delivered orders for average calculation
-  const deliveredOrdersCount = await Order.countDocuments({ status: "Delivered" });
+  // Count only paid orders for average calculation
+  const paidOrdersCount = await Order.countDocuments({
+    isPaid: true,
+  });
 
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
@@ -117,7 +120,7 @@ const getRevenueStats = asyncHandler(async (req, res) => {
   const todayRevenue = await Order.aggregate([
     {
       $match: {
-        status: "Delivered",
+        isPaid: true,
         updatedAt: { $gte: todayStart, $lte: todayEnd },
       },
     },
@@ -125,13 +128,27 @@ const getRevenueStats = asyncHandler(async (req, res) => {
   ]);
 
   const avgOrderValue =
-    deliveredOrdersCount > 0 ? (totalRevenue[0]?.total || 0) / deliveredOrdersCount : 0;
+    paidOrdersCount > 0
+      ? (totalRevenue[0]?.total || 0) / paidOrdersCount
+      : 0;
 
   res.json({
     totalRevenue: totalRevenue[0]?.total || 0,
-    totalOrders: deliveredOrdersCount,
+    totalOrders: paidOrdersCount,
     avgOrderValue: avgOrderValue.toFixed(2),
     todayRevenue: todayRevenue[0]?.total || 0,
+  });
+});
+
+const getAllPayments = asyncHandler(async (req, res) => {
+  const payments = await Payment.find()
+    .populate("user", "name email")
+    .populate("order")
+    .sort({ createdAt: -1 });
+
+  res.json({
+    success: true,
+    payments,
   });
 });
 
@@ -143,4 +160,5 @@ module.exports = {
   deleteProduct,
   updateOrderStatus,
   getRevenueStats,
+  getAllPayments,
 };

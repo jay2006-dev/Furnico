@@ -1,14 +1,39 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { getOrdersById } from "../services/orderService";
+import { createPaymentIntent } from "../services/paymentService";
 import { motion } from "framer-motion";
 import Button from "../components/ui/Button";
 
 const OrderDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState("");
+
+  const handlePayNow = async () => {
+    setPaying(true);
+    setPayError("");
+    try {
+      const data = await createPaymentIntent(order._id);
+      navigate("/payment", {
+        state: {
+          clientSecret: data.clientSecret,
+          orderId: order._id,
+        },
+      });
+    } catch (err) {
+      setPayError(
+        err.response?.data?.message ||
+          "Failed to initiate payment. Please try again.",
+      );
+    } finally {
+      setPaying(false);
+    }
+  };
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -86,7 +111,13 @@ const OrderDetails = () => {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Status</span>
+                  <span>Payment Status</span>
+                  <span className={`font-medium capitalize ${order.isPaid ? "text-green-600" : "text-red-600"}`}>
+                    {order.isPaid ? "Paid" : "Unpaid"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Shipping Status</span>
                   <span className="text-luxury-black capitalize font-medium">
                     {order.status || "Processing"}
                   </span>
@@ -104,6 +135,21 @@ const OrderDetails = () => {
                   </span>
                 </div>
               </div>
+              {!order.isPaid && (
+                <div className="mt-6">
+                  <Button
+                    variant="primary"
+                    className="w-full text-xs py-3 uppercase tracking-widest"
+                    onClick={handlePayNow}
+                    disabled={paying}
+                  >
+                    {paying ? "Processing..." : "Pay Now"}
+                  </Button>
+                  {payError && (
+                    <p className="text-red-600 font-sans text-xs mt-2 text-center">{payError}</p>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="bg-neutral-50 p-8 border border-neutral-200">

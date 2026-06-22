@@ -11,6 +11,7 @@ const {
   deleteProduct,
   updateOrderStatus,
   getRevenueStats,
+  getAllPayments,
 } = require("../controllers/adminController");
 
 // All admin routes require authentication and admin role
@@ -30,5 +31,7 @@ router.delete("/products/:id", deleteProduct);
 
 // Revenue
 router.get("/revenue", getRevenueStats);
+
+router.get("/payments", getAllPayments);
 
 module.exports = router;

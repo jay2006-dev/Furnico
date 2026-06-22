@@ -33,7 +33,17 @@ const orderSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    paidAt: Date,
+    paidAt: {
+      type: Date,
+    },
+    stripePaymentIntentId: {
+      type: String,
+    },
+
+    paymentMethod: {
+      type: String,
+      default: "Stripe",
+    },
     status: {
       type: String,
       enum: ["Pending", "Processing", "Shipped", "Delivered"],

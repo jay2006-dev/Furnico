@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import { useCallback } from "react";
 import CartContext from "./CartContext";
 
 export const CartProvider = ({ children }) => {
@@ -37,9 +37,10 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCartItems([]);
-  };
+  }, []);
+
   return (
     <CartContext.Provider
       value={{

@@ -2,7 +2,7 @@ import { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import RevenueWidget from "../components/admin/RevenueWidget";
-import OrdersWidget from "../components/admin/OrdersWidget";
+import CommerceWidget from "../components/admin/CommerceWidget";
 import ProductsWidget from "../components/admin/ProductsWidget";
 import EstimationChart from "../components/admin/EstimationChart";
 
@@ -83,7 +83,7 @@ const AdminDashboard = () => {
 
         {/* Orders Section */}
         <div className="mb-8">
-          <OrdersWidget />
+          <CommerceWidget />
         </div>
 
         {/* Products Section */}

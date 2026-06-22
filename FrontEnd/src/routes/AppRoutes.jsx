@@ -17,6 +17,9 @@ import AdminDashboard from "../pages/AdminDashboard";
 import PrivateRoute from "../components/PrivateRoute";
 import ScrollToTop from "../pages/ScrollToTop";
 import NotFound from "../pages/NotFound";
+import PaymentPage from "../pages/PaymentPage";
+import PaymentSuccess from "../pages/PaymentSuccess";
+import PaymentFailed from "../pages/PaymentFailed";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -43,6 +46,9 @@ const AppRoutes = () => {
               </PrivateRoute>
             }
           />
+          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-failed" element={<PaymentFailed />} />
           <Route
             path="/order/:id"
             element={

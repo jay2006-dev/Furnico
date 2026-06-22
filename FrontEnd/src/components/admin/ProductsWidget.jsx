@@ -60,7 +60,7 @@ const ProductsWidget = () => {
             Add Product
           </button>
         </div>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto overflow-y-auto max-h-[500px]">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b">
@@ -89,15 +89,17 @@ const ProductsWidget = () => {
                       </div>
                     </td>
                     <td className="py-3">{product.category?.name || "N/A"}</td>
-                    <td className="py-3">${product.price?.toFixed(2) || "0.00"}</td>
+                    <td className="py-3">
+                      ${product.price?.toFixed(2) || "0.00"}
+                    </td>
                     <td className="py-3">
                       <span
                         className={`px-2 py-1 rounded text-xs font-semibold ${
                           product.stock > 5
                             ? "bg-green-100 text-green-800"
                             : product.stock > 0
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-red-100 text-red-800"
                         }`}
                       >
                         {product.stock}

@@ -60,6 +60,14 @@ const adminService = {
       throw error.response?.data || error;
     }
   },
+  getAllPayments: async () => {
+    try {
+      const response = await API.get("/admin/payments");
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
 
   // Get revenue stats
   getRevenueStats: async () => {

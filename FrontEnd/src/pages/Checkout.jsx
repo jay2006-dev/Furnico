@@ -6,7 +6,7 @@ import Button from "../components/ui/Button";
 import { motion } from "framer-motion";
 
 const Checkout = () => {
-  const { cartItems, clearCart } = useContext(CartContext);
+  const { cartItems } = useContext(CartContext);
   const navigate = useNavigate();
   const [orderError, setOrderError] = useState("");
   const [placing, setPlacing] = useState(false);
@@ -44,9 +44,14 @@ const Checkout = () => {
     };
 
     try {
-      const order = await createOrder(orderData);
-      clearCart();
-      navigate(`/order/${order._id}`);
+      const response = await createOrder(orderData);
+
+      navigate("/payment", {
+        state: {
+          clientSecret: response.clientSecret,
+          orderId: response.order._id,
+        },
+      });
     } catch (error) {
       setOrderError(
         error.response?.data?.message ||
