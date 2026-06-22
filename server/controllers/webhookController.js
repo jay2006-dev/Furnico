@@ -1,11 +1,9 @@
 // controllers/webhookController.js
 
-const Stripe = require("stripe");
+const stripe = require("../config/stripe");
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 const Payment = require("../models/Payment");
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const stripeWebhook = async (req, res) => {
   console.log("Webhook received");
