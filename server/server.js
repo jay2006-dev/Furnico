@@ -21,24 +21,25 @@ const allowedOrigins = [
 ].filter(Boolean);
 
 app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, or server-to-server)
-      if (!origin) return callback(null, true);
-      
-      // If CLIENT_URL is defined in env, restrict access. Otherwise, allow all for dev.
-      if (process.env.CLIENT_URL) {
-        if (allowedOrigins.includes(origin)) {
-          return callback(null, true);
-        } else {
-          return callback(new Error("Not allowed by CORS"));
-        }
-      }
-      return callback(null, true);
-    },
-    credentials: true,
-  })
-);
+  cors(
+    //{
+    //   origin: (origin, callback) => {
+    //     // Allow requests with no origin (like mobile apps, curl, or server-to-server)
+    //     if (!origin) return callback(null, true);
+
+    //     // If CLIENT_URL is defined in env, restrict access. Otherwise, allow all for dev.
+    //     if (process.env.CLIENT_URL) {
+    //       if (allowedOrigins.includes(origin)) {
+    //         return callback(null, true);
+    //       } else {
+    //         return callback(new Error("Not allowed by CORS"));
+    //       }
+    //     }
+    //     return callback(null, true);
+    //   },
+    //   credentials: true,
+    // })
+  ));
 app.use("/api/webhook", webhookRoutes);
 
 app.use(express.json());
