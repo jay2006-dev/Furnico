@@ -14,7 +14,8 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { addToCart } = useContext(CartContext);
+  const { addToCart, cartItems } = useContext(CartContext);
+  const isProductInCart = cartItems.some((item) => item._id === product?._id);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -123,7 +124,7 @@ const ProductDetails = () => {
                 onClick={() => addToCart(product)}
                 disabled={product.stock <= 0}
               >
-                {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
+                {product.stock <= 0 ? "Out of Stock" : isProductInCart ? "Added to Cart" : "Add to Cart"}
               </Button>
               <p className="font-sans text-xs text-neutral-400 font-light text-center mt-2">
                 Complimentary white-glove delivery on all orders.
