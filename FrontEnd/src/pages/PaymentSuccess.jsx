@@ -10,7 +10,18 @@ const PaymentSuccess = () => {
 
   useEffect(() => {
     clearCart();
-  }, []);
+
+    // Prevent going back to checkout page
+    window.history.pushState(null, "", window.location.href);
+    const handlePopState = () => {
+      navigate("/", { replace: true });
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [clearCart, navigate]);
 
   return (
     <div className="min-h-screen bg-luxury-white flex items-center justify-center px-6">
