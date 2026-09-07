@@ -52,7 +52,6 @@ app.use("/api/v1/categories", require("./routes/categoryRoutes"));
 app.use("/api/v1/payment", paymentRoutes);
 
 app.get("/api/v1/health", (req, res) => {
-  console.log("Furnico API running Successfully");
   return res.status(200).json({ message: "Furnico API running.." });
 });
 
@@ -68,5 +67,4 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
 });

@@ -5,7 +5,6 @@ const Product = require("../models/Product");
 const stripe = require("../config/stripe");
 
 const createOrder = asyncHandler(async (req, res) => {
-  console.log("ORDER BODY:", req.body);
   const { orderItems, shippingAddress, totalPrice } = req.body;
   if (!orderItems || orderItems.length === 0) {
     return res.status(400).json({ message: "No Order Items" });
@@ -83,28 +82,22 @@ const getAllOrders = asyncHandler(async (req, res) => {
 });
 
 const getOrdersById = asyncHandler(async (req, res) => {
-  console.log("Fetching order:", req.params.id);
   const order = await Order.findById(req.params.id)
     .populate("user", "name email")
     .populate("orderItems.product", "name price");
 
-  console.log("Populated order:", order ? "Found" : "Not Found");
 
   if (!order) {
     return res.status(404).json({ message: "Order Not Found" });
   }
 
-  console.log("Order User ID:", order.user._id.toString());
-  console.log("Req User ID:", req.user._id.toString());
 
   // 🔐 Authorization check
   if (order.user._id.toString() !== req.user._id.toString()) {
-    console.log("Authorization failed");
     res.status(403);
     throw new Error("Not authorized");
   }
 
-  console.log("Returning order");
   res.json(order);
 });
 

@@ -63,7 +63,6 @@ const importData = async () => {
 
     await Product.insertMany(products);
 
-    console.log("Data Imported successfully with 30 luxury products!");
     process.exit();
   } catch (err) {
     console.error("Error with data import:", err);

@@ -4,7 +4,6 @@ const Order = require("../models/Order");
 
 const createPaymentIntent = async (req, res) => {
   try {
-    console.log("REQ BODY =", JSON.stringify(req.body, null, 2));
 
     const { orderId } = req.body;
 
@@ -35,7 +34,6 @@ const createPaymentIntent = async (req, res) => {
         // If the amount matches the order total price, reuse the client secret
         if (paymentIntent.amount === Math.round(order.totalPrice * 100)) {
           clientSecret = paymentIntent.client_secret;
-          console.log("Reusing existing Stripe Payment Intent:", paymentIntent.id);
         }
       } catch (err) {
         console.warn("Could not retrieve existing payment intent, creating a new one:", err.message);
@@ -43,7 +41,6 @@ const createPaymentIntent = async (req, res) => {
     }
 
     if (!clientSecret) {
-      console.log("Creating new Stripe Payment Intent for order:", orderId);
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(order.totalPrice * 100),
         currency: "inr",

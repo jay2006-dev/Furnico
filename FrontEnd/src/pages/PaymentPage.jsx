@@ -8,13 +8,10 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 export default function PaymentPage() {
   const { state } = useLocation();
 
-  console.log("STATE =", state);
-  console.log("PUBLISHABLE KEY =", import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
   if (!state?.clientSecret) {
     return <Navigate to="/checkout" replace />;
   }
-  console.log(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
   return (
     <Elements

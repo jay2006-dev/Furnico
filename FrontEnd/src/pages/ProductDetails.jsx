@@ -32,7 +32,6 @@ const ProductDetails = () => {
         setProduct(productData);
       } catch (err) {
         setError("Failed to fetch product");
-        console.log(err);
       } finally {
         setLoading(false);
       }
@@ -115,9 +114,17 @@ const ProductDetails = () => {
 
             {/* Actions */}
             <div className="flex flex-col gap-4 pt-6 mt-auto">
-              <p className="font-sans text-sm text-neutral-500 font-light">
-                Availability: {product.stock > 0 ? "In Stock" : "Out of Stock"}
-              </p>
+              <div className="flex items-center justify-between font-sans text-sm text-neutral-600 font-light">
+                <span>
+                  Availability:{" "}
+                  <span className={product.stock > 0 ? "text-emerald-700 font-medium" : "text-red-600 font-medium"}>
+                    {product.stock > 0 ? "In Stock" : "Out of Stock"}
+                  </span>
+                </span>
+                <span>
+                  Stock: <strong className="font-medium text-luxury-black">{product.stock > 0 ? product.stock : 0} units</strong>
+                </span>
+              </div>
               <Button
                 variant="primary"
                 className="w-full py-4 text-sm"
@@ -126,6 +133,11 @@ const ProductDetails = () => {
               >
                 {product.stock <= 0 ? "Out of Stock" : isProductInCart ? "Added to Cart" : "Add to Cart"}
               </Button>
+              {product.stock <= 0 && (
+                <p className="font-sans text-sm text-red-600 font-medium text-center">
+                  Out of Stock
+                </p>
+              )}
               <p className="font-sans text-xs text-neutral-400 font-light text-center mt-2">
                 Complimentary white-glove delivery on all orders.
               </p>

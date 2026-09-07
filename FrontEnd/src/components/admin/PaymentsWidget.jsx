@@ -8,8 +8,6 @@ const PaymentsWidget = () => {
     const fetchPayments = async () => {
       try {
         const data = await adminService.getAllPayments();
-        console.log(await adminService.getAllPayments());
-        console.log("PAYMENTS =", data);
         setPayments(data.payments || data || []);
       } catch (error) {
         console.error(error);

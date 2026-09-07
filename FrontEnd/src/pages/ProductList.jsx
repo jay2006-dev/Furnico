@@ -16,7 +16,6 @@ const ProductList = () => {
         setProducts(data.products || data);
       } catch (err) {
         setError("Failed to fetch products");
-        console.log(err);
       } finally {
         setLoading(false);
       }
