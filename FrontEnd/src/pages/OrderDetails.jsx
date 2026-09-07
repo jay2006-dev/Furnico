@@ -186,11 +186,12 @@ const OrderDetails = () => {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="flex items-center gap-6 pb-6 border-b border-neutral-100"
               >
-                <div className="w-20 h-20 bg-luxury-cream shrink-0">
-                  {/* Ideally image would be saved in order item, using placeholder if not */}
+                <div className="w-20 h-20 bg-luxury-cream shrink-0 overflow-hidden">
                   <img
                     src={
-                      item.product?.images?.[0] || "/placeholder-furniture.jpg"
+                      item.image ||
+                      item.product?.images?.[0] ||
+                      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=300"
                     }
                     alt={item.name}
                     className="w-full h-full object-cover"

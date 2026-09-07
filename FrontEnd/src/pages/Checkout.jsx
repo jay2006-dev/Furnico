@@ -33,6 +33,7 @@ const Checkout = () => {
         name: item.name,
         price: item.price,
         qty: item.quantity,
+        image: item.images?.[0] || item.image || "",
       })),
       shippingAddress: {
         address: address.street,
